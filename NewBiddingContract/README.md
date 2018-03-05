@@ -1,0 +1,1 @@
+NewBiddingContract example
