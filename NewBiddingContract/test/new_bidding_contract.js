@@ -291,8 +291,8 @@ function getDateTime() {
 function uglyDelay(ms) {
     var datetime = getDateTime();
     console.log('      --->Start delay: ', datetime);
-    var unixtime_ms = new Date().getTime();
-    while(new Date().getTime() < unixtime_ms + ms) {}
+    var time_in_ms = new Date().getTime();
+    while(new Date().getTime() < time_in_ms + ms) {}
     var datetime = getDateTime();
     console.log('      --->End delay: ', datetime);
 }
