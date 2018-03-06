@@ -15,6 +15,7 @@ Compilation, migration and testing:
 > truffle test ./test/new_bidding_contract.js
 
 ====================
+
 Results of testing:
 
 ```
