@@ -1,7 +1,8 @@
 var NewBiddingContract = artifacts.require("./NewBiddingContract.sol");
 
 /**
- * Test Case
+ * Written by: Friman Sanchez friman.sanchez.at.gmail.com
+ * Test Case:
  * 1. Lets say Owner is the dealer - so he is the one who owns the contract
  * 2. Bill participates in the bid with 4 ethers
  * 3. Frank participates in the bid with 5 ethers
@@ -55,7 +56,6 @@ contract('NewBiddingContract', function(accounts) {
       console.log('   Mitchel\'s balance before bidding: ',web3.fromWei(result.toNumber(),'ether'));
       console.log('');
 
-
 //      var sendValue = web3.toWei(20,'ether');
 //      console.log('We are going to send ethers from Owner to the contract:', web3.fromWei(sendValue,'ether'));
 //      web3.eth.sendTransaction({from:owners_address,to:new_bidding_contract.address, value:sendValue});
@@ -74,12 +74,10 @@ contract('NewBiddingContract', function(accounts) {
       new_bidding_contract.placeBid("Maria Beltran",bidAmount, {from:marias_address, value:bidAmount});
       console.log('   Maria placed a Bid with 6 ethers... ');
 
-      
       // Ugly delay to simulate that contract is timed or has expired.
       // The duration of the contract was configured with 5 seconds in ./migration/2_deploy_contracts.js.
       // With uglyDelay(2000) milliseconds, the bidding duration has not expired and Mitchel can place a bid.
       // We can change this value to test some other behaviours.
-
       uglyDelay(2000);
 
       bidAmount = web3.toWei(7,'ether');
