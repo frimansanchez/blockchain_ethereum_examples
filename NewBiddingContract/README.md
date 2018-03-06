@@ -17,6 +17,7 @@ Compilation, migration and testing:
 ====================
 Results of testing:
 
+```
 Using network 'development'.
 
   Contract: NewBiddingContract
@@ -84,5 +85,6 @@ Bidding has been destroyed
 
 
   1 passing (10s)
+```
 
 
