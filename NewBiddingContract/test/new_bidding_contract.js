@@ -284,7 +284,7 @@ function getDateTime() {
 // NOTE: DO NOT USE ON PUBLIC WEBSITES.
 // For browsers, setTimeout and setInterval function are the way to go.
 // BUT: For testing server-side code, or simulations like the one we want to perform here
-// we require a blocking function (where we can effectively have thread synchronization).
+// we require a blocking function.
 // So, the ugly solution is here:
 function uglyDelay(ms) {
     var datetime = getDateTime();
