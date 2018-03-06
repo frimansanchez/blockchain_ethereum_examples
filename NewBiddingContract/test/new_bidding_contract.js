@@ -204,6 +204,11 @@ contract('NewBiddingContract', function(accounts) {
 
       console.log('--------------------------');
       console.log('Is Bidding expired?: ',result);
+      if(result == true ) {
+        console.log(' --> The bidding time is over. Bidders should claim their ethers!!!');
+      } else {
+        console.log(' --> The bidding is still open. Bidders still have time to participate in the bidding!!!');
+      }
       console.log('');
       
       return new_bidding_contract.canBidEnd();
@@ -283,7 +288,6 @@ function getDateTime() {
 // BUT: For testing server-side code, or simulations like the one we want to perform here
 // we require a blocking function (where we can effectively have thread synchronization).
 // So, the ugly solution is here:
-
 function uglyDelay(ms) {
     var datetime = getDateTime();
     console.log('      --->Start delay: ', datetime);
