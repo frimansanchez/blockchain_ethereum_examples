@@ -12,8 +12,16 @@ pragma solidity ^0.4.4;
 
 /**
  * Additional description:
- * by Friman Sanchez. friman.sanchez.at.gmail.com
+ * This is an implementation of the BiddingContract exercise proposed in the Udemy Course.
+ * Implemented by Friman Sanchez. friman.sanchez.at.gmail.com
  * 
+ * Some changes has been included:
+ * 1. duration variable is in seconds
+ * 2. Some additional methods are included: 
+ *    - getNumberOfBidders()
+ *    - removeBidder()
+ *    - hasBidExpired()
+ *    - 
  **/
  
  
@@ -35,7 +43,6 @@ contract NewBiddingContract {
     address   bidder;
     string    name;
     uint      bidAmount;
-    // Ethers pull pattern used
     bool      claimedEthers;
   }
 
@@ -46,10 +53,10 @@ contract NewBiddingContract {
   // Maintain all bidders in an array
   Bidder[]  bidders;
 
-  // This maintains the high bidder
+  // This maintains the highest bidder
   Bidder    highBidder;
 
-  // Modifier to ensure owner is executing something.
+  // Modifier to ensure the owner is the only one with with execution permission.
   modifier onlyOwner {
     require(msg.sender == owner);
     _;
@@ -60,29 +67,30 @@ contract NewBiddingContract {
     if(now < createdAt + duration){
       _;
     } else {
-      /**throw;*  Throw deprecated */
       revert();
     }
   }
 
-  // Ensures that bid can be received i.e, auction not ended
+  // Ensures that bid cannot be received i.e, auction ended
   modifier expired {
     if(now >= createdAt + duration){
       _;
     } else {
-      /**throw;*  Throw deprecated */
       revert();
     }
   }
   
-  // duration in seconds
-  // start price in ethers
+  /**
+   * Duration in seconds
+   * start price in ethers
+   * constructor
+   **/
   function NewBiddingContract(string nm, 
-                           string desc, 
-                           uint dur,
-                           uint sBid
-                           ) public payable {
-    // constructor
+                              string desc, 
+                              uint dur,
+                              uint sBid
+                              ) public payable {
+
     name=nm;
     description=desc;
     duration= dur;
@@ -93,20 +101,24 @@ contract NewBiddingContract {
     highBidder.bidAmount = startBid; 
   }
 
-  // Bid function is what gets called by any bidder
+  /**
+   * Bid function is what gets called by any bidder
+   * Losers will be added to the bidders array. The claim flag in struct
+   * maintains the status of whether the caller has already been given the ethers or not
+   **/
   function  placeBid(string newName, uint newBid) public payable timed {
 
+    // Some check.
     if(msg.value != newBid) revert();
-
     if(msg.value < startBid) revert();
     
     uint currentHighestBid = getHighBid();
 
     // Create a Bidder structure and add to bidders array
     Bidder memory theBidder;
-    theBidder.bidder = msg.sender;
-    theBidder.name = newName;
-    theBidder.bidAmount = newBid;
+    theBidder.bidder        = msg.sender;
+    theBidder.name          = newName;
+    theBidder.bidAmount     = newBid;
 
     theBidder.claimedEthers = true;
 
@@ -139,12 +151,11 @@ contract NewBiddingContract {
     // Return the bidAmount held in high bidder
     return highBidder.bidAmount;
   }
-  
-  
-  // This is invoked by anyone to check if there are ethers
-  // in the contract that they can claim
-  // Losers will be added to the bidders array. The claim flag in struct
-  // maintains the status of whether the caller has already been given the ethers or not
+
+  /**
+   * This is invoked by anyone to check if there are ethers
+   * in the contract that they can claim
+   **/
   function  getClaimAmount() public view returns(uint){
     for(uint i=0; i<bidders.length ; i++) {
       // check if msg.sender is in the bidders
@@ -162,7 +173,7 @@ contract NewBiddingContract {
 
   
   /**
-   * claimEthers: This is basically the Withdraw function.
+   * claimEthers: This is basically the withdraw function.
    * Losers will call this to get their bid ethers back  
    **/
   function  claimEthers() public {
@@ -195,14 +206,19 @@ contract NewBiddingContract {
     revert();
   }
   
-
+  /** getNumberOfBidders(): This methods can be called by anyone
+   * to know how many bidders are so far.
+   **/
   function getNumberOfBidders() public constant returns (uint) {
     // Return the bidAmount held in high bidder
     return bidders.length;
   }
 
-  
-function removeBidder(uint index) private {    
+  /** 
+   * removeBidder(): Method to remove a lossing bidder from theBidder
+   * bidders array.
+   **/
+  function removeBidder(uint index) private {    
     if (index < bidders.length) {    
       //Copy the last bidder of the array into the position [index].
       bidders[index] = bidders[bidders.length-1];
@@ -212,7 +228,9 @@ function removeBidder(uint index) private {
     return;
   }
   
-  // Function for bidders to see if the bid has expired
+  /** hasBidExpired(): Method to see if the bid has expired
+   * because of time
+   **/
   function  hasBidExpired() public view returns (bool) {
     // If there are not bidders to claim their ethers
     if(now >= createdAt + duration) {
@@ -221,9 +239,11 @@ function removeBidder(uint index) private {
     return false;
   }
 
-  // Can a bid end if there are unclaimed ethers 
-  // In later version the claims data will be moved to a separate contract
-  // Claims will be made losers against the separate contract
+  /** 
+   * CanBidEnd() is used to know if there are unclaimed ethers 
+   * In a later version the claims data will be moved to a separate contract
+   * Claims will be made losers against the separate contract
+   **/
   function  canBidEnd() public view returns (bool) {
     // If there are not bidders to claim their ethers
     if(bidders.length == 0) {
@@ -232,15 +252,19 @@ function removeBidder(uint index) private {
     return false;
   }
 
-  // To know the balance of the contract. Only owner can execute this method.
+  /**
+   * To know the balance of the contract. Only owner can execute this method.
+   **/
   function getBalance() onlyOwner public view returns (uint){
     return this.balance;
   }
   
-
-  // This ends the bidding 
-  // Only owner can call this function - apply modifier
-  // All ethers returned to the owner as part of self destruct
+  /** 
+   * This ends the bidding:
+   * - Only owner can call this function - apply modifier
+   * - Only when the bidding has expired - apply modifier
+   * All ethers are returned to the owner as part of self destruct
+   **/
   function endBidding() onlyOwner expired public {
     selfdestruct(owner);
   }
@@ -248,8 +272,8 @@ function removeBidder(uint index) private {
   
   // If payable fallback is not defined then you wont be able to send 
   // ethers to the contract
-  function() public payable {
-    // Do nothing at this time....
-  }
+//  function() public payable {
+//    // Do nothing at this time....
+//  }
 
 }
