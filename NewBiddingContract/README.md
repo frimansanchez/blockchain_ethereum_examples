@@ -1,12 +1,12 @@
-NewBiddingContract example
+## NewBiddingContract example
 This is an implementation of the BiddingContract proposed in the Udemy course
 https://www.udemy.com/ethereum-dapp/learn/v4/overview in section 8.92.
 
-Setup:
+# Setup:
 Truffle v4.0.6 (core: 4.0.6)
 Solidity v0.4.19 (solc-js)
 
-Compilation, migration and testing:
+# Compilation, migration and testing:
 
 > truffle compile
 
@@ -16,7 +16,7 @@ Compilation, migration and testing:
 
 ====================
 
-Results of testing:
+# Results of testing:
 
 ```
 Using network 'development'.
