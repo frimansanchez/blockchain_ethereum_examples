@@ -7,17 +7,11 @@ Truffle v4.0.6 (core: 4.0.6)
 Solidity v0.4.19 (solc-js)
 
 # Compilation, migration and testing:
-
 > truffle compile
-
 > truffle migrate --network development --reset --all
-
 > truffle test ./test/new_bidding_contract.js
 
-====================
-
 # Results of testing:
-
 ```
 Using network 'development'.
 
