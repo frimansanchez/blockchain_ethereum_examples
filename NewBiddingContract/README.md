@@ -1,4 +1,4 @@
-## NewBiddingContract example
+# NewBiddingContract example
 This is an implementation of the BiddingContract proposed in the Udemy course
 https://www.udemy.com/ethereum-dapp/learn/v4/overview in section 8.92.
 
